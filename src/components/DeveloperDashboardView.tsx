@@ -1658,342 +1658,283 @@ CREATE TABLE rate_rules (
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.99 }}
       transition={{ duration: 0.2 }}
-      className="fixed inset-0 z-50 flex bg-zinc-950 text-zinc-100 font-sans overflow-hidden"
+      className="fixed inset-0 z-50 flex bg-[#f8fafc] text-slate-900 font-sans overflow-hidden"
     >
-      {/* ---------------- LEFT NAVIGATION SIDEBAR ---------------- */}
-      <aside className="w-64 border-r border-zinc-800 bg-zinc-900/90 flex flex-col shrink-0 hidden md:flex">
-        {/* Brand Logo & Live Badge */}
-        <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 text-black flex items-center justify-center font-black shadow-lg shadow-amber-500/20">
-              {userRole === "employee" ? <Film className="w-5 h-5 stroke-[2.5]" /> : <Code className="w-5 h-5 stroke-[2.5]" />}
-            </div>
-            <div>
-              <h1 className="text-sm font-black tracking-tight text-white">
-                {userRole === "employee" ? "Cinema Hub" : "Publishing Dashboard"}
-              </h1>
-              <div className="flex items-center space-x-1">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[10px] text-amber-400 font-bold uppercase tracking-wider">
-                  {userRole === "employee" ? "Employee Portal" : "Developer Control"}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
+      {/* ---------------- LEFT NAVIGATION SIDEBAR (LIGHT THEME) ---------------- */}
+      <aside className="w-16 sm:w-20 bg-white border-r border-slate-200/80 flex flex-col items-center py-5 justify-between shrink-0 z-20">
+        {/* Top Logo */}
+        <div className="flex flex-col items-center space-y-6 w-full">
+          <button
+            onClick={() => setActiveSection("articles")}
+            className="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-black shadow-md shadow-blue-500/20 hover:scale-105 transition-transform cursor-pointer"
+            title="News & Story Manager"
+          >
+            <Sparkles className="w-5 h-5" />
+          </button>
 
-        {/* Sidebar Navigation Items */}
-        <div className="p-3 space-y-1 flex-1 overflow-y-auto">
-          <div className="px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-zinc-500">
-            {userRole === "employee" ? "Employee Publishing" : "Core App Modules"}
-          </div>
-
-          {[
-            { id: "articles", label: "Articles & Content Studio", icon: Newspaper, count: articles.length },
-            { id: "reviews", label: "Movie Reviews (IMDb)", icon: Star, count: movieReviews.length },
-            { id: "polls", label: "Polls Engine", icon: Vote, count: polls.length },
-            { id: "ratings", label: "Movie Ratings", icon: Star, count: ratings.length },
-            { id: "gallery", label: "Gallery Catalog", icon: ImageIcon, count: gallery.length },
-            { id: "reels", label: "Video Reels Stream", icon: Film, count: reels.length },
-          ].map((item) => {
-            const IconComp = item.icon;
-            const isSelected = activeSection === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => setActiveSection(item.id as DevSection)}
-                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                  isSelected
-                    ? "bg-amber-500 text-black shadow-md shadow-amber-500/20"
-                    : "text-zinc-400 hover:text-white hover:bg-zinc-800/60"
-                }`}
-              >
-                <div className="flex items-center space-x-2.5">
-                  <div
-                    className={`w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
-                      isSelected ? "border-black bg-black" : "border-zinc-500 bg-transparent"
-                    }`}
-                  >
-                    {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />}
-                  </div>
-                  <IconComp className="w-4 h-4 shrink-0" />
-                  <span>{item.label}</span>
-                </div>
-                <span
-                  className={`px-1.5 py-0.5 rounded text-[10px] ${
+          {/* Vertical Navigation Icon Bar */}
+          <div className="flex flex-col items-center space-y-2 w-full px-2">
+            {[
+              { id: "articles", title: "News & Articles", icon: Newspaper },
+              { id: "reviews", title: "IMDb Reviews", icon: Users },
+              { id: "polls", title: "Polls & Fan Votes", icon: Vote },
+              { id: "ratings", title: "Movie Ratings", icon: Star },
+              { id: "gallery", title: "Photo Galleries", icon: ImageIcon },
+              { id: "reels", title: "Video Stories", icon: Film },
+              { id: "rates", title: "Rate Calculator", icon: Calculator },
+              { id: "schema", title: "Database DDL", icon: Code },
+            ].map((item) => {
+              const IconComp = item.icon;
+              const isSelected = activeSection === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveSection(item.id as DevSection)}
+                  title={item.title}
+                  className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all cursor-pointer ${
                     isSelected
-                      ? "bg-black/20 text-black font-extrabold"
-                      : "bg-zinc-800 text-zinc-400"
+                      ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
+                      : "text-slate-400 hover:text-slate-800 hover:bg-slate-100"
                   }`}
                 >
-                  {item.count}
-                </span>
-              </button>
-            );
-          })}
-
-          {/* Developer-Only Navigation Tools */}
-          {userRole === "developer" && (
-            <>
-              <div className="pt-4 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-zinc-500">
-                Engine & Blueprint
-              </div>
-
-              <button
-                onClick={() => setActiveSection("rates")}
-                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-all ${
-                  activeSection === "rates"
-                    ? "bg-amber-500 text-black shadow-md shadow-amber-500/20"
-                    : "text-zinc-400 hover:text-white hover:bg-zinc-800/60"
-                }`}
-              >
-                <div className="flex items-center space-x-2.5">
-                  <Calculator className="w-4 h-4 shrink-0" />
-                  <span>Rate Calculator</span>
-                </div>
-                <span className="text-[10px] font-mono text-amber-400 font-extrabold">
-                  {multiplier}x
-                </span>
-              </button>
-
-              <button
-                onClick={() => setActiveSection("schema")}
-                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-all ${
-                  activeSection === "schema"
-                    ? "bg-amber-500 text-black shadow-md shadow-amber-500/20"
-                    : "text-zinc-400 hover:text-white hover:bg-zinc-800/60"
-                }`}
-              >
-                <div className="flex items-center space-x-2.5">
-                  <Database className="w-4 h-4 shrink-0" />
-                  <span>Database DDL</span>
-                </div>
-                <span className="text-[9px] uppercase px-1 py-0.5 bg-emerald-500/20 text-emerald-400 rounded font-black">
-                  PostgreSQL
-                </span>
-              </button>
-            </>
-          )}
+                  <IconComp className="w-5 h-5 stroke-[2]" />
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        {/* User Account & Status Footer */}
-        <div className="p-3 border-t border-zinc-800 bg-zinc-950/60">
-          <div className="p-2.5 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-between">
-            <div className="flex items-center space-x-2.5 min-w-0">
-              <div className="w-8 h-8 rounded-lg bg-amber-500 text-black flex items-center justify-center font-black text-xs shrink-0">
-                {userRole === "employee" ? "EMP" : "DEV"}
-              </div>
-              <div className="min-w-0">
-                <p className="text-xs font-bold text-zinc-200 truncate">
-                  {userRole === "employee" ? "Employee Account" : "Developer Account"}
-                </p>
-                <p className="text-[10px] text-amber-400 font-mono truncate">{staffEmail}</p>
-              </div>
-            </div>
-            <button
-              type="button"
-              onClick={handleStaffLogout}
-              className="p-1.5 rounded-lg text-zinc-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
-              title="Staff Logout"
-            >
-              <LogOut className="w-4 h-4" />
-            </button>
-          </div>
+        {/* Bottom Staff Logout / Account */}
+        <div className="flex flex-col items-center space-y-3">
+          <button
+            type="button"
+            onClick={handleStaffLogout}
+            className="w-10 h-10 rounded-2xl bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200 flex items-center justify-center transition-colors cursor-pointer"
+            title="Log Out Staff Account"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
         </div>
       </aside>
 
-      {/* ---------------- MAIN RIGHT CANVAS AREA ---------------- */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-zinc-950">
+      {/* ---------------- MAIN CANVAS AREA (LIGHT THEME) ---------------- */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-[#f8fafc]">
         {/* Top Header Bar */}
-        <header className="h-16 px-4 sm:px-6 border-b border-zinc-800 bg-zinc-900/60 flex items-center justify-between shrink-0">
-          <div className="flex items-center space-x-3 flex-1 max-w-md">
-            <div className="relative w-full">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
-              <input
-                type="text"
-                placeholder="Search dashboard items, polls, media assets, articles..."
-                className="w-full pl-9 pr-4 py-1.5 rounded-xl bg-zinc-800/60 border border-zinc-700/60 text-xs text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-amber-500/80 transition-colors"
-              />
+        <header className="px-6 py-5 border-b border-slate-200/80 bg-white flex flex-col md:flex-row md:items-center justify-between gap-4 shrink-0">
+          <div>
+            <div className="flex items-center space-x-1 text-xs font-medium text-slate-400">
+              <span>Content Portal</span>
+              <span>&gt;</span>
+              <span className="text-slate-600 font-semibold">News &amp; Content Manager</span>
             </div>
+            <h1 className="text-2xl font-black text-slate-900 tracking-tight mt-0.5">
+              News &amp; Story Manager
+            </h1>
+            <p className="text-xs text-slate-500 font-medium">
+              Create and publish news articles, photo galleries, video stories, and audience polls
+            </p>
           </div>
 
-          <div className="flex items-center space-x-2">
-            {/* Front End App Emulation Button */}
+          <div className="flex flex-wrap items-center gap-2.5">
+            {/* Front End Reader Button */}
             <button
               onClick={() => setShowAppEmulationModal(true)}
-              className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-emerald-600 hover:from-purple-500 hover:to-emerald-500 text-white text-xs font-black transition-all flex items-center space-x-2 shadow-md shadow-indigo-500/20 active:scale-95 cursor-pointer ring-2 ring-purple-500/30"
+              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all flex items-center space-x-2 shadow-sm cursor-pointer"
               title="Open Live Front End Reader App Emulation Frame"
             >
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <Smartphone className="w-4 h-4" />
-              <span>Front End App Emulation</span>
-            </button>
-
-            <button
-              onClick={onClose}
-              className="px-3.5 py-1.5 rounded-xl bg-emerald-600/90 hover:bg-emerald-500 text-white text-xs font-bold transition-all flex items-center space-x-1.5 shadow-xs active:scale-95 cursor-pointer"
-              title="Switch to Full Reader View"
-            >
-              <span>Full Reader App</span>
+              <span>Front End Reader</span>
               <ExternalLink className="w-3.5 h-3.5 text-emerald-200" />
             </button>
 
+            {/* Copy Front End Link */}
             <button
               onClick={() => {
                 const url = window.location.origin + window.location.pathname + "?reader=true";
                 navigator.clipboard.writeText(url);
                 showToast("Front End Reader Link copied to clipboard!");
               }}
-              className="px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-bold transition-all flex items-center space-x-1.5"
-              title="Copy Front End Reader URL"
+              className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all flex items-center space-x-1.5 border border-slate-200 cursor-pointer"
+              title="Copy Front End Link"
             >
-              <Copy className="w-3.5 h-3.5 text-zinc-400" />
-              <span className="hidden sm:inline">Copy App Link</span>
+              <Copy className="w-3.5 h-3.5 text-slate-500" />
+              <span>Copy Front End Link</span>
+            </button>
+
+            {/* Create Article Button */}
+            <button
+              onClick={handleResetArticleForm}
+              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all flex items-center space-x-1.5 shadow-sm shadow-blue-500/20 cursor-pointer"
+            >
+              <Plus className="w-4 h-4 stroke-[3]" />
+              <span>+ Create Article</span>
+            </button>
+
+            {/* Notification Mail & Bell Badges */}
+            <button
+              onClick={() => showToast("Inbox: 2 new story drafts awaiting review.")}
+              className="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-600 relative transition-colors cursor-pointer"
+              title="Messages & Activity"
+            >
+              <MessageSquare className="w-4 h-4" />
+              <span className="w-2 h-2 rounded-full bg-blue-600 absolute top-2 right-2 ring-2 ring-white" />
             </button>
 
             <button
+              onClick={() => showToast("Push Alerts: All system alerts are functioning normally.")}
+              className="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-600 relative transition-colors cursor-pointer"
+              title="Push Notifications"
+            >
+              <Bell className="w-4 h-4" />
+              <span className="w-2 h-2 rounded-full bg-rose-500 absolute top-2 right-2 ring-2 ring-white" />
+            </button>
+
+            {/* Log Out Button */}
+            <button
               onClick={handleStaffLogout}
-              className="px-3 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 text-xs font-bold transition-all flex items-center space-x-1 cursor-pointer"
-              title="Logout and return to Login Landing Page"
+              className="px-3.5 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-600 text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer"
+              title="Log Out Staff Session"
             >
               <LogOut className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Logout</span>
+              <span>Log Out</span>
             </button>
           </div>
         </header>
 
-        {/* Mobile Navigation Tabs (for small screens) */}
-        <div className="md:hidden p-2.5 border-b border-zinc-800 bg-zinc-900/80 overflow-x-auto flex space-x-1 shrink-0">
-          <button
-            onClick={() => setActiveSection("reviews")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 ${
-              activeSection === "reviews" ? "bg-amber-500 text-black" : "text-zinc-400"
-            }`}
-          >
-            Reviews (IMDb)
-          </button>
-          <button
-            onClick={() => setActiveSection("polls")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 ${
-              activeSection === "polls" ? "bg-amber-500 text-black" : "text-zinc-400"
-            }`}
-          >
-            Polls
-          </button>
-          <button
-            onClick={() => setActiveSection("ratings")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 ${
-              activeSection === "ratings" ? "bg-amber-500 text-black" : "text-zinc-400"
-            }`}
-          >
-            Ratings
-          </button>
-          <button
-            onClick={() => setActiveSection("gallery")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 ${
-              activeSection === "gallery" ? "bg-amber-500 text-black" : "text-zinc-400"
-            }`}
-          >
-            Gallery
-          </button>
-          <button
-            onClick={() => setActiveSection("reels")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 ${
-              activeSection === "reels" ? "bg-amber-500 text-black" : "text-zinc-400"
-            }`}
-          >
-            Reels
-          </button>
-          {userRole === "developer" && (
-            <>
-              <button
-                onClick={() => setActiveSection("rates")}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 ${
-                  activeSection === "rates" ? "bg-amber-500 text-black" : "text-zinc-400"
-                }`}
-              >
-                Rates
-              </button>
-              <button
-                onClick={() => setActiveSection("schema")}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 ${
-                  activeSection === "schema" ? "bg-amber-500 text-black" : "text-zinc-400"
-                }`}
-              >
-                Schema
-              </button>
-            </>
-          )}
-        </div>
-
-        {/* Scrollable Dashboard Canvas */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 max-w-6xl mx-auto w-full space-y-6">
-          {/* Top Dribbble Metric Stat Cards Bar */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-2">
+        {/* Scrollable Main Content Canvas */}
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 max-w-7xl mx-auto w-full space-y-6">
+          {/* Top Metric Summary Cards Bar (Light Theme) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {/* Card 1: Published Articles */}
+            <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-zinc-400">Audience Poll Votes</span>
-                <div className="p-1.5 rounded-lg bg-amber-500/10 text-amber-500">
-                  <Vote className="w-4 h-4" />
+                <div>
+                  <h3 className="text-xs font-bold text-slate-800">Published Articles</h3>
+                  <p className="text-[10px] text-slate-400 font-medium">Live Content</p>
+                </div>
+                <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+                  <Newspaper className="w-5 h-5" />
                 </div>
               </div>
-              <div className="flex items-baseline space-x-2">
-                <span className="text-2xl font-black tracking-tight text-white">61,350</span>
-                <span className="text-xs font-bold text-emerald-400 flex items-center">
-                  <ArrowUpRight className="w-3 h-3 mr-0.5" /> +18.4%
+              <div className="flex items-baseline justify-between pt-1">
+                <span className="text-3xl font-black tracking-tight text-slate-900">
+                  {articles.filter((a) => a.status === "Active" || a.status === "published").length || 3}
+                </span>
+                <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 text-[11px] font-extrabold flex items-center">
+                  <ArrowUpRight className="w-3 h-3 mr-0.5" /> +23%
                 </span>
               </div>
-              <p className="text-[10px] text-zinc-500">Across {polls.length} active polls</p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-2">
+            {/* Card 2: Draft Articles */}
+            <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-zinc-400">HD Gallery Assets</span>
-                <div className="p-1.5 rounded-lg bg-blue-500/10 text-blue-400">
-                  <ImageIcon className="w-4 h-4" />
+                <div>
+                  <h3 className="text-xs font-bold text-slate-800">Draft Articles</h3>
+                  <p className="text-[10px] text-slate-400 font-medium">In Progress</p>
+                </div>
+                <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold">
+                  <Sparkles className="w-5 h-5" />
                 </div>
               </div>
-              <div className="flex items-baseline space-x-2">
-                <span className="text-2xl font-black tracking-tight text-white">
-                  {gallery.length + reels.length} Media
+              <div className="flex items-baseline justify-between pt-1">
+                <span className="text-3xl font-black tracking-tight text-slate-900">
+                  {articles.filter((a) => a.status === "Draft" || a.status === "draft").length || 1}
                 </span>
-                <span className="text-xs font-bold text-emerald-400 flex items-center">
-                  <ArrowUpRight className="w-3 h-3 mr-0.5" /> +12.0%
+                <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 text-[11px] font-extrabold flex items-center">
+                  <ArrowUpRight className="w-3 h-3 mr-0.5" /> +10%
                 </span>
               </div>
-              <p className="text-[10px] text-zinc-500">S3 / CDN asset synchronization</p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-2">
+            {/* Card 3: Total Views */}
+            <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-zinc-400">Rate Calculator</span>
-                <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400">
-                  <Calculator className="w-4 h-4" />
+                <div>
+                  <h3 className="text-xs font-bold text-slate-800">Total Views</h3>
+                  <p className="text-[10px] text-slate-400 font-medium">This Month</p>
+                </div>
+                <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center font-bold">
+                  <Eye className="w-5 h-5" />
                 </div>
               </div>
-              <div className="flex items-baseline space-x-2">
-                <span className="text-2xl font-black tracking-tight text-white">
-                  ${baseRate} base
+              <div className="flex items-baseline justify-between pt-1">
+                <span className="text-3xl font-black tracking-tight text-slate-900">19.9k</span>
+                <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 text-[11px] font-extrabold flex items-center">
+                  <ArrowUpRight className="w-3 h-3 mr-0.5" /> +13%
                 </span>
-                <span className="text-xs font-bold text-amber-400">{multiplier}x</span>
               </div>
-              <p className="text-[10px] text-zinc-500">{taxPercentage}% Tax in sandbox</p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-2">
+            {/* Card 4: Scheduled */}
+            <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-zinc-400">Analyzed Rating Avg</span>
-                <div className="p-1.5 rounded-lg bg-purple-500/10 text-purple-400">
-                  <Star className="w-4 h-4" />
+                <div>
+                  <h3 className="text-xs font-bold text-slate-800">Scheduled</h3>
+                  <p className="text-[10px] text-slate-400 font-medium">Future Publish</p>
+                </div>
+                <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+                  <Clock className="w-5 h-5" />
                 </div>
               </div>
-              <div className="flex items-baseline space-x-2">
-                <span className="text-2xl font-black tracking-tight text-white">{avgRating} / 10</span>
-                <span className="text-xs font-bold text-purple-400">{totalRated} Movies</span>
+              <div className="flex items-baseline justify-between pt-1">
+                <span className="text-3xl font-black tracking-tight text-slate-900">
+                  {articles.filter((a) => a.status === "Scheduled" || a.status === "scheduled").length || 1}
+                </span>
+                <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 text-[11px] font-extrabold flex items-center">
+                  <ArrowUpRight className="w-3 h-3 mr-0.5" /> +64%
+                </span>
               </div>
-              <p className="text-[10px] text-zinc-500">Ratings & Reviews Catalog</p>
             </div>
           </div>
+
+          {/* Overview & Content Directory Section Header */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
+            <div>
+              <h2 className="text-lg font-black text-slate-900 tracking-tight">
+                Overview &amp; Content Directory
+              </h2>
+              <p className="text-xs text-slate-500 font-medium">
+                Manage all news articles, video stories, photo galleries, and audience polls
+              </p>
+            </div>
+            <button
+              onClick={() => setActiveSection("articles")}
+              className="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all self-start sm:self-auto border border-slate-200 cursor-pointer"
+            >
+              View All Articles
+            </button>
+          </div>
+
+          {/* Search & Filter Bar */}
+          <div className="bg-white border border-slate-200/80 rounded-2xl p-3 sm:p-4 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="relative flex-1 w-full">
+              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Search articles, doctor name, category..."
+                className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white transition-colors"
+              />
+            </div>
+
+            <div className="flex items-center space-x-2.5 w-full sm:w-auto shrink-0">
+              <select className="px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-700 focus:outline-none focus:border-blue-500 cursor-pointer">
+                <option value="all">STATUS: All Statuses</option>
+                <option value="active">Active / Published</option>
+                <option value="draft">Drafts</option>
+                <option value="scheduled">Scheduled</option>
+              </select>
+
+              <select className="px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-700 focus:outline-none focus:border-blue-500 cursor-pointer">
+                <option value="all">CATEGORY: All Categories</option>
+                <option value="cinema">Cinema &amp; Movies</option>
+                <option value="cardiology">Cardiology</option>
+                <option value="psychiatrist">Psychiatrist</option>
+                <option value="sports">Sports</option>
+              </select>
+            </div>
+          </div>
+
         {/* Toast Alert */}
         <AnimatePresence>
           {saveToast && (
@@ -2001,7 +1942,7 @@ CREATE TABLE rate_rules (
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="p-3 rounded-2xl bg-amber-500 text-black font-extrabold text-xs flex items-center space-x-2 shadow-lg"
+              className="p-3 rounded-2xl bg-blue-600 text-white font-extrabold text-xs flex items-center space-x-2 shadow-lg"
             >
               <CheckCircle2 className="w-4 h-4 shrink-0" />
               <span>{saveToast}</span>
@@ -2015,23 +1956,23 @@ CREATE TABLE rate_rules (
             {/* LEFT COLUMN: WYSIWYG FORM CONTROLS & CONTENT PUBLISHER (7 cols) */}
             <div className="lg:col-span-7 space-y-6">
               {/* Studio Header & Quick Action Toolbar */}
-              <div className="p-5 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-4 shadow-xl">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-800 pb-3">
+              <div className="p-5 rounded-3xl bg-white border border-slate-200/80 space-y-4 shadow-xs">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-3">
                   <div>
                     <div className="flex items-center space-x-2">
-                      <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 text-[10px] font-mono font-bold uppercase tracking-wider border border-amber-500/30">
+                      <span className="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-600 text-[10px] font-mono font-bold uppercase tracking-wider border border-blue-200">
                         WYSIWYG Studio
                       </span>
                       {editingArticleId && (
-                        <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-mono font-bold border border-emerald-500/30">
+                        <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-600 text-[10px] font-mono font-bold border border-emerald-200">
                           Editing ID: {editingArticleId}
                         </span>
                       )}
                     </div>
-                    <h2 className="text-base font-black text-white tracking-tight mt-1">
+                    <h2 className="text-base font-black text-slate-900 tracking-tight mt-1">
                       Content Publishing Studio
                     </h2>
-                    <p className="text-xs text-zinc-400 font-medium">
+                    <p className="text-xs text-slate-500 font-medium">
                       Real-time live mobile sync across News, Sports, IMDb, Photo Galleries, Video Stories & Polls.
                     </p>
                   </div>
@@ -2039,9 +1980,9 @@ CREATE TABLE rate_rules (
                   <button
                     type="button"
                     onClick={handleResetArticleForm}
-                    className="px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-bold transition-all flex items-center space-x-1.5 self-start sm:self-auto cursor-pointer"
+                    className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all flex items-center space-x-1.5 self-start sm:self-auto cursor-pointer border border-slate-200"
                   >
-                    <Plus className="w-3.5 h-3.5 text-amber-400" />
+                    <Plus className="w-3.5 h-3.5 text-blue-600" />
                     <span>New Story</span>
                   </button>
                 </div>
@@ -2052,9 +1993,9 @@ CREATE TABLE rate_rules (
                     type="button"
                     disabled={isSavingArticle}
                     onClick={() => handlePublishArticle()}
-                    className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-black font-extrabold text-xs shadow-lg shadow-amber-500/20 transition-all flex items-center space-x-2 cursor-pointer disabled:opacity-50"
+                    className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs shadow-xs transition-all flex items-center space-x-2 cursor-pointer disabled:opacity-50"
                   >
-                    <Sparkles className="w-4 h-4 fill-black" />
+                    <Sparkles className="w-4 h-4 fill-slate-950 text-slate-950" />
                     <span>{isSavingArticle ? "Publishing..." : "Publish Live Now"}</span>
                   </button>
 
@@ -2062,9 +2003,9 @@ CREATE TABLE rate_rules (
                     type="button"
                     disabled={isSavingArticle}
                     onClick={handleSaveDraftArticle}
-                    className="px-3.5 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold text-xs border border-zinc-700 transition-all flex items-center space-x-1.5 cursor-pointer"
+                    className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs border border-slate-200 transition-all flex items-center space-x-1.5 cursor-pointer"
                   >
-                    <Save className="w-3.5 h-3.5 text-zinc-400" />
+                    <Save className="w-3.5 h-3.5 text-slate-500" />
                     <span>Save Draft</span>
                   </button>
 
@@ -2072,7 +2013,7 @@ CREATE TABLE rate_rules (
                     type="button"
                     disabled={isSavingArticle}
                     onClick={handleScheduleArticle}
-                    className="px-3.5 py-2 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 font-bold text-xs border border-blue-500/30 transition-all flex items-center space-x-1.5 cursor-pointer"
+                    className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs transition-all flex items-center space-x-1.5 cursor-pointer"
                   >
                     <Calendar className="w-3.5 h-3.5" />
                     <span>Schedule</span>
@@ -2083,43 +2024,43 @@ CREATE TABLE rate_rules (
                     onClick={() => handleTogglePinArticle()}
                     className={`px-3.5 py-2 rounded-xl font-bold text-xs transition-all flex items-center space-x-1.5 cursor-pointer border ${
                       articleIsPinned
-                        ? "bg-amber-500/20 text-amber-300 border-amber-500/50"
-                        : "bg-zinc-800/80 text-zinc-400 border-zinc-700 hover:text-zinc-200"
+                        ? "bg-amber-500 text-slate-950 border-amber-600 font-black shadow-xs"
+                        : "bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200"
                     }`}
                   >
-                    <Pin className={`w-3.5 h-3.5 ${articleIsPinned ? "fill-amber-400 text-amber-400" : ""}`} />
+                    <Pin className={`w-3.5 h-3.5 ${articleIsPinned ? "fill-slate-950 text-slate-950" : ""}`} />
                     <span>{articleIsPinned ? "Pinned #1" : "Pin Story"}</span>
                   </button>
                 </div>
               </div>
 
               {/* Form Input Fields & Category-Aware Controls */}
-              <div className="p-5 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-4">
+              <div className="p-5 rounded-3xl bg-white border border-slate-200/80 space-y-4 shadow-xs">
                 {/* 1. Story Title Input */}
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-black uppercase tracking-wider text-zinc-400 flex items-center justify-between">
+                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600 flex items-center justify-between">
                     <span>Story Title / Headline *</span>
-                    <span className="text-amber-500 font-mono text-[10px]">Real-time Sync Active</span>
+                    <span className="text-blue-600 font-mono text-[10px]">Real-time Sync Active</span>
                   </label>
                   <input
                     type="text"
                     value={articleTitle}
                     onChange={(e) => setArticleTitle(e.target.value)}
                     placeholder="Enter breaking news or article headline..."
-                    className="w-full px-4 py-2.5 rounded-2xl bg-zinc-950 border border-zinc-800 text-white text-sm font-bold focus:border-amber-500 focus:outline-none transition-all"
+                    className="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 text-sm font-bold focus:border-blue-500 focus:bg-white focus:outline-none transition-all"
                   />
                 </div>
 
                 {/* 2. Category & Story Type Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-[11px] font-black uppercase tracking-wider text-zinc-400">
+                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
                       Category Tag
                     </label>
                     <select
                       value={articleCategory}
                       onChange={(e) => setArticleCategory(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-2xl bg-zinc-950 border border-zinc-800 text-amber-400 text-xs font-bold focus:border-amber-500 focus:outline-none cursor-pointer"
+                      className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-800 text-xs font-bold focus:border-blue-500 focus:bg-white focus:outline-none cursor-pointer"
                     >
                       <option value="Cinema">Cinema & Movies</option>
                       <option value="Movie Reviews">IMDb / Movie Reviews</option>
@@ -2137,13 +2078,13 @@ CREATE TABLE rate_rules (
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-[11px] font-black uppercase tracking-wider text-zinc-400">
+                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
                       Story Format Layout
                     </label>
                     <select
                       value={articleStoryType}
                       onChange={(e) => setArticleStoryType(e.target.value as CardType)}
-                      className="w-full px-3.5 py-2.5 rounded-2xl bg-zinc-950 border border-zinc-800 text-zinc-200 text-xs font-bold focus:border-amber-500 focus:outline-none cursor-pointer"
+                      className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-800 text-xs font-bold focus:border-blue-500 focus:bg-white focus:outline-none cursor-pointer"
                     >
                       <option value="article">Standard Article (Text + Image)</option>
                       <option value="gallery">Photo Gallery Album Grid</option>
@@ -2156,7 +2097,7 @@ CREATE TABLE rate_rules (
                 {/* 3. Author Name & Scheduled Time Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-[11px] font-black uppercase tracking-wider text-zinc-400">
+                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
                       Author / Reporter Name
                     </label>
                     <input
@@ -2164,19 +2105,19 @@ CREATE TABLE rate_rules (
                       value={articleAuthor}
                       onChange={(e) => setArticleAuthor(e.target.value)}
                       placeholder="Alex Rivers"
-                      className="w-full px-3.5 py-2.5 rounded-2xl bg-zinc-950 border border-zinc-800 text-zinc-200 text-xs font-semibold focus:border-amber-500 focus:outline-none"
+                      className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-800 text-xs font-semibold focus:border-blue-500 focus:bg-white focus:outline-none"
                     />
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-[11px] font-black uppercase tracking-wider text-zinc-400">
+                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
                       Schedule Date & Time
                     </label>
                     <input
                       type="datetime-local"
                       value={articleScheduledTime}
                       onChange={(e) => setArticleScheduledTime(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-2xl bg-zinc-950 border border-zinc-800 text-blue-400 text-xs font-semibold focus:border-amber-500 focus:outline-none"
+                      className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-blue-600 text-xs font-semibold focus:border-blue-500 focus:bg-white focus:outline-none"
                     />
                   </div>
                 </div>
@@ -2184,28 +2125,28 @@ CREATE TABLE rate_rules (
                 {/* 4. Featured Image URL & Presets */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <label className="text-[11px] font-black uppercase tracking-wider text-zinc-400">
+                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
                       Featured Image URL
                     </label>
                     <div className="flex space-x-1.5">
                       <button
                         type="button"
                         onClick={() => setArticleImageUrl("https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&q=80&w=800")}
-                        className="px-2 py-0.5 rounded bg-zinc-800 hover:bg-zinc-700 text-[10px] text-zinc-300 font-medium cursor-pointer"
+                        className="px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-[10px] text-slate-700 font-medium cursor-pointer border border-slate-200"
                       >
                         Cinema
                       </button>
                       <button
                         type="button"
                         onClick={() => setArticleImageUrl("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&q=80&w=800")}
-                        className="px-2 py-0.5 rounded bg-zinc-800 hover:bg-zinc-700 text-[10px] text-zinc-300 font-medium cursor-pointer"
+                        className="px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-[10px] text-slate-700 font-medium cursor-pointer border border-slate-200"
                       >
                         Poster
                       </button>
                       <button
                         type="button"
                         onClick={() => setArticleImageUrl("https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&q=80&w=800")}
-                        className="px-2 py-0.5 rounded bg-zinc-800 hover:bg-zinc-700 text-[10px] text-zinc-300 font-medium cursor-pointer"
+                        className="px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-[10px] text-slate-700 font-medium cursor-pointer border border-slate-200"
                       >
                         Sports
                       </button>
@@ -2216,14 +2157,14 @@ CREATE TABLE rate_rules (
                     value={articleImageUrl}
                     onChange={(e) => setArticleImageUrl(e.target.value)}
                     placeholder="https://images.unsplash.com/..."
-                    className="w-full px-3.5 py-2.5 rounded-2xl bg-zinc-950 border border-zinc-800 text-zinc-200 text-xs font-mono focus:border-amber-500 focus:outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-800 text-xs font-mono focus:border-blue-500 focus:bg-white focus:outline-none"
                   />
                 </div>
 
                 {/* 5. Category-Aware Dynamic Fields */}
                 {articleStoryType === "gallery" && (
-                  <div className="p-3.5 rounded-2xl bg-amber-500/5 border border-amber-500/20 space-y-1.5">
-                    <label className="text-[11px] font-black uppercase tracking-wider text-amber-400 flex items-center space-x-1">
+                  <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 space-y-1.5">
+                    <label className="text-[11px] font-black uppercase tracking-wider text-amber-800 flex items-center space-x-1">
                       <ImageIcon className="w-3.5 h-3.5" />
                       <span>Gallery Album Image URLs (Comma Separated)</span>
                     </label>
@@ -2232,14 +2173,14 @@ CREATE TABLE rate_rules (
                       value={articleGalleryImages}
                       onChange={(e) => setArticleGalleryImages(e.target.value)}
                       placeholder="https://img1.jpg, https://img2.jpg, https://img3.jpg"
-                      className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-200 text-xs font-mono focus:border-amber-500 focus:outline-none"
+                      className="w-full px-3 py-2 rounded-xl bg-white border border-amber-200 text-slate-800 text-xs font-mono focus:border-amber-500 focus:outline-none"
                     />
                   </div>
                 )}
 
                 {articleStoryType === "video" && (
-                  <div className="p-3.5 rounded-2xl bg-blue-500/5 border border-blue-500/20 space-y-1.5">
-                    <label className="text-[11px] font-black uppercase tracking-wider text-blue-400 flex items-center space-x-1">
+                  <div className="p-3.5 rounded-2xl bg-blue-50 border border-blue-200 space-y-1.5">
+                    <label className="text-[11px] font-black uppercase tracking-wider text-blue-800 flex items-center space-x-1">
                       <Film className="w-3.5 h-3.5" />
                       <span>Direct Video Stream MP4 URL</span>
                     </label>
@@ -2248,14 +2189,14 @@ CREATE TABLE rate_rules (
                       value={articleVideoUrl}
                       onChange={(e) => setArticleVideoUrl(e.target.value)}
                       placeholder="https://commondatastorage.googleapis.com/.../sample.mp4"
-                      className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-200 text-xs font-mono focus:border-amber-500 focus:outline-none"
+                      className="w-full px-3 py-2 rounded-xl bg-white border border-blue-200 text-slate-800 text-xs font-mono focus:border-blue-500 focus:outline-none"
                     />
                   </div>
                 )}
 
                 {articleStoryType === "poll" && (
-                  <div className="p-3.5 rounded-2xl bg-purple-500/5 border border-purple-500/20 space-y-2">
-                    <label className="text-[11px] font-black uppercase tracking-wider text-purple-400 flex items-center space-x-1">
+                  <div className="p-3.5 rounded-2xl bg-purple-50 border border-purple-200 space-y-2">
+                    <label className="text-[11px] font-black uppercase tracking-wider text-purple-800 flex items-center space-x-1">
                       <Vote className="w-3.5 h-3.5" />
                       <span>Poll Question & Options</span>
                     </label>
@@ -2264,26 +2205,26 @@ CREATE TABLE rate_rules (
                       value={articlePollQuestion}
                       onChange={(e) => setArticlePollQuestion(e.target.value)}
                       placeholder="Which movie break box office records first?"
-                      className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-200 text-xs font-bold focus:border-amber-500 focus:outline-none"
+                      className="w-full px-3 py-2 rounded-xl bg-white border border-purple-200 text-slate-800 text-xs font-bold focus:border-purple-500 focus:outline-none"
                     />
                     <input
                       type="text"
                       value={articlePollOptions}
                       onChange={(e) => setArticlePollOptions(e.target.value)}
                       placeholder="Option A, Option B, Option C"
-                      className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-300 text-xs font-medium focus:border-amber-500 focus:outline-none"
+                      className="w-full px-3 py-2 rounded-xl bg-white border border-purple-200 text-slate-700 text-xs font-medium focus:border-purple-500 focus:outline-none"
                     />
                   </div>
                 )}
 
                 {articleCategory === "Movie Reviews" && (
-                  <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 space-y-2">
+                  <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 space-y-2">
                     <div className="flex items-center justify-between">
-                      <label className="text-[11px] font-black uppercase tracking-wider text-amber-400 flex items-center space-x-1">
-                        <Star className="w-3.5 h-3.5 fill-amber-400" />
+                      <label className="text-[11px] font-black uppercase tracking-wider text-amber-800 flex items-center space-x-1">
+                        <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
                         <span>Movie Score Rating (10-Star Scale)</span>
                       </label>
-                      <span className="text-sm font-black text-amber-300">{articleMovieRating} / 10★</span>
+                      <span className="text-sm font-black text-amber-600">{articleMovieRating} / 10★</span>
                     </div>
                     <input
                       type="range"
@@ -2299,7 +2240,7 @@ CREATE TABLE rate_rules (
 
                 {/* 6. Excerpt Summary Field */}
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-black uppercase tracking-wider text-zinc-400">
+                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
                     Story Excerpt / Subtitle Summary
                   </label>
                   <textarea
@@ -2307,47 +2248,47 @@ CREATE TABLE rate_rules (
                     value={articleExcerpt}
                     onChange={(e) => setArticleExcerpt(e.target.value)}
                     placeholder="Brief 2-sentence summary shown on feed cards..."
-                    className="w-full px-3.5 py-2.5 rounded-2xl bg-zinc-950 border border-zinc-800 text-zinc-200 text-xs font-medium focus:border-amber-500 focus:outline-none resize-none"
+                    className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-800 text-xs font-medium focus:border-blue-500 focus:bg-white focus:outline-none resize-none"
                   />
                 </div>
 
                 {/* 7. Main Article Content Paragraphs */}
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-black uppercase tracking-wider text-zinc-400 flex items-center justify-between">
+                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600 flex items-center justify-between">
                     <span>Full Article Content (Double Break for Paragraphs)</span>
-                    <span className="text-[10px] text-zinc-500">{articleContent.length} chars</span>
+                    <span className="text-[10px] text-slate-400">{articleContent.length} chars</span>
                   </label>
                   <textarea
                     rows={6}
                     value={articleContent}
                     onChange={(e) => setArticleContent(e.target.value)}
                     placeholder="Type full article paragraphs here..."
-                    className="w-full px-3.5 py-2.5 rounded-2xl bg-zinc-950 border border-zinc-800 text-zinc-200 text-xs font-medium focus:border-amber-500 focus:outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-800 text-xs font-medium focus:border-blue-500 focus:bg-white focus:outline-none"
                   />
                 </div>
 
                 {/* Pin Slot & Push Broadcast Checkbox */}
-                <div className="flex flex-wrap items-center justify-between pt-2 border-t border-zinc-800 gap-3">
+                <div className="flex flex-wrap items-center justify-between pt-2 border-t border-slate-200 gap-3">
                   <div className="flex flex-wrap items-center gap-4">
-                    <label className="flex items-center space-x-2 text-xs font-bold text-zinc-300 cursor-pointer">
+                    <label className="flex items-center space-x-2 text-xs font-bold text-slate-700 cursor-pointer">
                       <input
                         type="checkbox"
                         checked={articleIsPinned}
                         onChange={(e) => setArticleIsPinned(e.target.checked)}
-                        className="w-4 h-4 rounded border-zinc-700 bg-zinc-900 text-amber-500 focus:ring-amber-500 cursor-pointer"
+                        className="w-4 h-4 rounded border-slate-300 bg-slate-50 text-amber-500 focus:ring-amber-500 cursor-pointer"
                       />
                       <span>Pin Story to Hero Banner #1</span>
                     </label>
 
-                    <label className="flex items-center space-x-2 text-xs font-bold text-purple-300 cursor-pointer">
+                    <label className="flex items-center space-x-2 text-xs font-bold text-purple-700 cursor-pointer">
                       <input
                         type="checkbox"
                         checked={pushAlertToggle}
                         onChange={(e) => setPushAlertToggle(e.target.checked)}
-                        className="w-4 h-4 rounded border-purple-500 bg-zinc-900 text-purple-500 focus:ring-purple-500 cursor-pointer"
+                        className="w-4 h-4 rounded border-purple-300 bg-slate-50 text-purple-600 focus:ring-purple-500 cursor-pointer"
                       />
                       <span className="flex items-center space-x-1">
-                        <Bell className="w-3.5 h-3.5 text-purple-400" />
+                        <Bell className="w-3.5 h-3.5 text-purple-600" />
                         <span>5-Min Delayed Push Alert</span>
                       </span>
                     </label>
@@ -2356,89 +2297,92 @@ CREATE TABLE rate_rules (
                   <button
                     type="button"
                     onClick={() => showToast("Simulated Mobile Push Notification Broadcast Sent Immediately!")}
-                    className="px-3 py-1 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 text-[11px] font-bold border border-purple-500/30 transition-all flex items-center space-x-1 cursor-pointer"
+                    className="px-3 py-1 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 text-[11px] font-bold border border-purple-200 transition-all flex items-center space-x-1 cursor-pointer"
                   >
-                    <Bell className="w-3 h-3 text-purple-400" />
+                    <Bell className="w-3 h-3 text-purple-600" />
                     <span>Instant Push Alert</span>
                   </button>
                 </div>
 
                 {pushAlertToggle && (
-                  <div className="w-full mt-2 p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-200 text-[11px] font-medium flex items-center space-x-2">
-                    <Bell className="w-4 h-4 text-purple-400 shrink-0" />
+                  <div className="w-full mt-2 p-2.5 rounded-xl bg-purple-50 border border-purple-200 text-purple-800 text-[11px] font-medium flex items-center space-x-2">
+                    <Bell className="w-4 h-4 text-purple-600 shrink-0" />
                     <span><strong>Notice:</strong> Push Notification is scheduled to be sent 5 minutes after publishing to allow final content re-checking.</span>
                   </div>
                 )}
               </div>
 
               {/* PUBLISHED STORIES DATABASE CATALOG TABLE */}
-              <div className="p-5 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-3">
+              <div className="p-5 rounded-3xl bg-white border border-slate-200/80 space-y-3 shadow-xs">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xs font-black uppercase tracking-wider text-amber-500 flex items-center space-x-2">
-                    <Database className="w-4 h-4" />
+                  <h3 className="text-xs font-black uppercase tracking-wider text-slate-800 flex items-center space-x-2">
+                    <Database className="w-4 h-4 text-blue-600" />
                     <span>Live Database Articles Catalog ({articles.length})</span>
                   </h3>
-                  <span className="text-[10px] text-emerald-400 font-mono">Firestore & REST Synced</span>
+                  <span className="text-[10px] text-emerald-600 font-mono font-bold">Firestore &amp; REST Synced</span>
                 </div>
 
-                <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
+                <div className="space-y-3 max-h-96 overflow-y-auto pr-1">
                   {articles.map((art) => (
                     <div
                       key={art.id}
-                      className={`p-3 rounded-2xl border transition-all flex items-center justify-between gap-3 ${
-                        editingArticleId === art.id
-                          ? "bg-amber-500/10 border-amber-500/40"
-                          : "bg-zinc-950/60 border-zinc-800 hover:border-zinc-700"
+                      className={`p-3.5 rounded-2xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+                        art.pinPosition && art.pinPosition > 0
+                          ? "bg-amber-50/50 border-amber-300"
+                          : editingArticleId === art.id
+                          ? "bg-blue-50/50 border-blue-300"
+                          : "bg-white border-slate-200/80 hover:border-slate-300 shadow-xs"
                       }`}
                     >
-                      <div className="flex items-center space-x-3 min-w-0">
+                      <div className="flex items-center space-x-3.5 min-w-0">
                         <img
                           src={art.imageUrl}
                           alt={art.title}
-                          className="w-12 h-12 rounded-xl object-cover shrink-0 border border-zinc-800"
+                          className="w-16 h-16 rounded-2xl object-cover shrink-0 border border-slate-200 shadow-xs"
                           referrerPolicy="no-referrer"
                         />
-                        <div className="min-w-0">
-                          <div className="flex items-center space-x-2">
-                            <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-400 uppercase">
+                        <div className="min-w-0 space-y-1">
+                          <div className="flex items-center space-x-2 flex-wrap gap-y-1">
+                            {art.pinPosition && art.pinPosition > 0 && (
+                              <span className="px-2 py-0.5 rounded-full text-[9px] font-black bg-amber-500 text-slate-950 flex items-center space-x-0.5 shadow-xs">
+                                <Pin className="w-2.5 h-2.5 fill-slate-950" />
+                                <span>PINNED #{art.pinPosition}</span>
+                              </span>
+                            )}
+                            <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-100 text-slate-700 uppercase border border-slate-200">
                               {art.category}
                             </span>
                             <span
-                              className={`px-1.5 py-0.5 rounded text-[9px] font-bold uppercase ${
-                                art.status === "Active"
-                                  ? "bg-emerald-500/20 text-emerald-400"
-                                  : art.status === "Draft"
-                                  ? "bg-zinc-800 text-zinc-400"
-                                  : "bg-blue-500/20 text-blue-400"
+                              className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase ${
+                                art.status === "Active" || art.status === "published"
+                                  ? "bg-emerald-100 text-emerald-700"
+                                  : art.status === "Draft" || art.status === "draft"
+                                  ? "bg-slate-100 text-slate-600"
+                                  : "bg-blue-100 text-blue-700"
                               }`}
                             >
                               {art.status}
                             </span>
-                            {art.pinPosition && art.pinPosition > 0 && (
-                              <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500 text-black flex items-center space-x-0.5">
-                                <Pin className="w-2.5 h-2.5 fill-black" />
-                                <span>PINNED</span>
-                              </span>
-                            )}
                           </div>
-                          <h4 className="text-xs font-bold text-white truncate mt-0.5">{art.title}</h4>
-                          <p className="text-[10px] text-zinc-500">{art.doctorName} • {art.date}</p>
+                          <h4 className="text-xs font-black text-slate-900 truncate">{art.title}</h4>
+                          <p className="text-[10px] text-slate-500 font-medium">By {art.doctorName || art.author} • {art.date}</p>
                         </div>
                       </div>
 
-                      <div className="flex items-center space-x-1 shrink-0">
+                      <div className="flex items-center space-x-1.5 shrink-0 self-end sm:self-center">
                         <button
                           type="button"
                           onClick={() => handleLoadArticleForEdit(art)}
-                          className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white transition-all cursor-pointer"
+                          className="px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-bold text-xs transition-all cursor-pointer flex items-center space-x-1"
                           title="Edit in WYSIWYG Editor"
                         >
                           <Edit2 className="w-3.5 h-3.5" />
+                          <span className="hidden sm:inline">Edit</span>
                         </button>
                         <button
                           type="button"
                           onClick={() => handleCancelScheduledPush(art.id)}
-                          className="p-1.5 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 transition-all cursor-pointer"
+                          className="p-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-600 transition-all cursor-pointer"
                           title="Cancel Scheduled Push Notification"
                         >
                           <Bell className="w-3.5 h-3.5" />
@@ -2446,10 +2390,10 @@ CREATE TABLE rate_rules (
                         <button
                           type="button"
                           onClick={() => handleTogglePinArticle(art.id)}
-                          className={`p-1.5 rounded-lg transition-all cursor-pointer ${
+                          className={`p-1.5 rounded-xl transition-all cursor-pointer border ${
                             art.pinPosition && art.pinPosition > 0
-                              ? "bg-amber-500/20 text-amber-400 hover:bg-amber-500/30"
-                              : "bg-zinc-800 text-zinc-400 hover:text-white"
+                              ? "bg-amber-500 text-slate-950 border-amber-600 shadow-xs"
+                              : "bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200"
                           }`}
                           title="Toggle Pin Position"
                         >
@@ -2458,7 +2402,7 @@ CREATE TABLE rate_rules (
                         <button
                           type="button"
                           onClick={() => handleDeleteArticle(art.id)}
-                          className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-all cursor-pointer"
+                          className="p-1.5 rounded-xl bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 transition-all cursor-pointer"
                           title="Delete from Database"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
