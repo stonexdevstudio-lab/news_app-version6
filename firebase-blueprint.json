@@ -1,0 +1,221 @@
+{
+  "entities": {
+    "SavedArticle": {
+      "title": "Saved Article",
+      "description": "Represents a user-liked or bookmarked news article stored in Firestore",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique record identifier"
+        },
+        "articleId": {
+          "type": "string",
+          "description": "The ID of the saved article"
+        },
+        "userId": {
+          "type": "string",
+          "description": "The UID of the user who saved the article"
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "publisher": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "summary": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "category": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "imageUrl": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "readTime": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "publishedAt": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "savedAt": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "isBookmarked": {
+          "type": "boolean"
+        }
+      },
+      "required": ["articleId", "userId", "title", "savedAt"]
+    },
+    "Poll": {
+      "title": "Interactive Poll",
+      "description": "Live community poll question with interactive voting options synced across devices",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique poll identifier"
+        },
+        "question": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "category": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "badge": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "totalVotes": {
+          "type": "number"
+        }
+      },
+      "required": ["id", "question", "totalVotes"]
+    },
+    "PollVote": {
+      "title": "Poll Vote Record",
+      "description": "User vote selection record for a given poll",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "pollId": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "optionId": {
+          "type": "string"
+        },
+        "votedAt": {
+          "type": "string"
+        }
+      },
+      "required": ["pollId", "userId", "optionId"]
+    },
+    "PublishedArticle": {
+      "title": "Published Article",
+      "description": "Cinema and news articles created in the content studio",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "category": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "excerpt": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "doctorName": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "doctorAvatar": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "date": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "views": {
+          "type": "number"
+        },
+        "status": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "imageUrl": {
+          "type": "string",
+          "maxLength": 1000
+        }
+      },
+      "required": ["id", "title", "category", "excerpt", "doctorName", "status"]
+    },
+    "DevRole": {
+      "title": "Developer Privilege Role",
+      "description": "Developer role registry entry defining privileges and assigned user details",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "roleName": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "assignedUser": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "email": {
+          "type": "string",
+          "maxLength": 150
+        },
+        "permissions": {
+          "type": "array"
+        },
+        "status": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "registeredAt": {
+          "type": "string",
+          "maxLength": 50
+        }
+      },
+      "required": ["id", "roleName", "assignedUser", "email"]
+    }
+  },
+  "firestore": {
+    "/dev_roles/{roleId}": {
+      "schema": {
+        "$ref": "#/entities/DevRole"
+      },
+      "description": "Developer privilege roles and permissions registry"
+    },
+    "/published_articles/{articleId}": {
+      "schema": {
+        "$ref": "#/entities/PublishedArticle"
+      },
+      "description": "Collection of published cinema news and entertainment articles"
+    },
+    "/saved_articles/{savedId}": {
+      "schema": {
+        "$ref": "#/entities/SavedArticle"
+      },
+      "description": "Collection of articles saved or liked by users"
+    },
+    "/polls/{pollId}": {
+      "schema": {
+        "$ref": "#/entities/Poll"
+      },
+      "description": "Collection of active community polls"
+    },
+    "/poll_votes/{voteId}": {
+      "schema": {
+        "$ref": "#/entities/PollVote"
+      },
+      "description": "User vote recordings for live polls"
+    }
+  }
+}

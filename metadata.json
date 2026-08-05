@@ -1,0 +1,6 @@
+{
+  "name": "News & ELA Dashboard",
+  "description": "Android Material News Reader & ELA Dashboard with Gemini AI summarization, cinema polls, news reels, and personalized news deck.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
